@@ -1,0 +1,47 @@
+// 个人补充订阅：与公共订阅并用；启用后停用本地重复的虎扑规则。
+// 更新规则时递增 version，保持订阅 id、应用 id、规则组 key 和规则 key 不变。
+// 2026-11-10 v1：发布虎扑圆形无文字跳过规则，分别适配冷启动与热启动。
+// 依据：虎扑 8.2.54.07231；快照 1794300087807、1794301762414。
+// 两份快照已通过离线匹配验证；冷启动已获用户确认，热启动实际点击待确认。
+{
+  id: 1794301762,
+  name: 'arsenalxj 的 GKD 补充规则',
+  version: 1,
+  author: 'arsenalxj',
+  updateUrl: 'https://raw.githubusercontent.com/arsenalxj/gkd-rules/main/gkd.json5',
+  supportUri: 'https://github.com/arsenalxj/gkd-rules/issues',
+  apps: [
+    {
+      id: 'com.hupu.games',
+      name: '虎扑',
+      groups: [
+        {
+          key: 1794300087,
+          name: '开屏广告-圆形无文字跳过补充',
+          desc: '分别匹配冷启动 MainActivity/fl_splash_root 与热启动 HpAdHotBootActivity/fl_ad_root 内右上区域的无文字跳过按钮。',
+          enable: true,
+          ignoreGlobalGroupMatch: true,
+          matchRoot: true,
+          fastQuery: false,
+          matchTime: 10000,
+          forcedTime: 10000,
+          actionMaximum: 1,
+          // 按页面刷新重置，避免沿用同一次应用会话中的旧计时和点击次数。
+          resetMatch: 'activity',
+          rules: [
+            {
+              key: 0,
+              activityIds: ['com.hupu.games.main.MainActivity'],
+              matches: '[vid="fl_splash_root"] > FrameLayout > View[clickable=true][focusable=true][childCount=0][text=null][desc=null][id=null][visibleToUser=true][width>=60 && width<=200 && height>=60 && height<=200][left>parent.width.div(2) && top<parent.height.div(3)]',
+            },
+            {
+              key: 1,
+              activityIds: ['com.hupu.adver_boot.hot.HpAdHotBootActivity'],
+              matches: '[vid="fl_ad_root"] > FrameLayout > View[clickable=true][focusable=true][childCount=0][text=null][desc=null][id=null][visibleToUser=true][width>=60 && width<=200 && height>=60 && height<=200][left>parent.width.div(2) && top<parent.height.div(3)]',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
